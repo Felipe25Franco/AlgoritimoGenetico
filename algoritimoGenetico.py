@@ -1,3 +1,5 @@
+import random
+
 totalFazendas = 40
 raioAntena = 10
 populacao = 500
@@ -107,3 +109,24 @@ while (cont < populacao):
 print("\n*** Melhor solução encontrada ***")
 print(f"Aptidão = {faBest:.4f}")
 print(f"Solução = {Best}")
+
+#GERAÇÕES POPULACIONAIS
+
+cont = 0
+
+while (cont < geracoes):
+
+    cont += 1
+    print(f"\n--- Geração {cont} ---")
+    pais = random.sample(pop, 50)
+    
+    # Exibe os pais selecionados
+    print("Pais selecionados:")
+    for i, (aptidao, solucao) in enumerate(pais):
+        print(f"Pai {i+1}: Aptidão = {aptidao:.4f}, Solução = {solucao}")
+    
+
+    
+#print("Melhor solução")
+#print(Best)
+#print("Aptidão Best",faBest)  
