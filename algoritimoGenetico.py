@@ -57,6 +57,16 @@ def calculaCobertura(solucao):
     tot=sum(cob)
     return(tot)
 
+
+def calculaRedundancia(solucao):
+    red=0
+    for i in range (len(solucao)):
+        pos=solucao[i]
+        for j in range (totalFazendas):
+            if distanciaFazendas[pos][j]<=10:
+                red+=1
+    return(red)
+
 cont=0
 Best=[]
 faBest=0
