@@ -44,3 +44,39 @@ distanciaFazendas = [[ 0.0,  3.6,  16.5,  28.4,  14.8,  29.1,  25.3,  25.6,  25.
 [41.6,  39.1,  38.1,  41.7,  39.4,  39.1,  37.1,  36.2,  34.9,  31.4,  38.2,  27.2,  30.0,  24.2,  31.1,  21.5,  22.5,  23.6,  16.1,  15.0,  20.6,  21.9,  18.4,  23.4,  11.4,  8.1,  16.6,  22.1,  6.3,  5.4,  16.5,  25.2,  12.2,  9.1,  12.0,  21.0,  17.0,  15.0,  0.0,  21.0],
 [50.5,  49.2,  39.8,  37.0,  53.9,  34.0,  34.2,  33.2,  32.4,  31.3,  55.2,  36.9,  45.0,  38.6,  49.2,  24.7,  21.9,  15.1,  32.6,  17.7,  11.4,  10.0,  38.3,  43.9,  14.4,  18.8,  36.9,  42.8,  24.0,  23.8,  37.3,  46.2,  9.5,  12.2,  33.1,  42.0,  4.1,  6.1,  21.0,  0.0]]
 
+cont=0
+Best=[]
+faBest=0
+pop=[]    
+
+while (cont < populacao):
+    cont+=1
+
+    solucao=[]
+    tot=calculaCobertura(solucao)
+    
+    while(tot<40):
+        tota=tot
+        fazenda=random.randint(0,39)
+        solucao.append(fazenda)
+        tot=calculaCobertura(solucao)
+        if tota==tot:
+            i=solucao.index(fazenda)
+            del solucao[i]
+    redundancia = calculaRedundancia(solucao)
+    ant=len(solucao)
+    fa=redundancia/ant
+    pop.append([fa, solucao])
+    
+    
+    if (fa>faBest):
+        faBest=fa
+        Best=solucao[:]
+        
+    # Print da solução criada
+    print(f"Solução {cont}: Aptidão = {fa:.4f}, Antenas = {ant}, Redundância = {redundancia}, Solução = {solucao}")
+    
+# Melhor solução ao final
+print("\n*** Melhor solução encontrada ***")
+print(f"Aptidão = {faBest:.4f}")
+print(f"Solução = {Best}")
