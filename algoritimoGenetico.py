@@ -67,6 +67,10 @@ def calculaRedundancia(solucao):
                 red+=1
     return(red)
 
+def calculaAptidao(redundancia,ant):
+    fa = redundancia / ant
+    return fa
+
 cont=0
 Best=[]
 faBest=0
@@ -88,7 +92,7 @@ while (cont < populacao):
             del solucao[i]
     redundancia = calculaRedundancia(solucao)
     ant=len(solucao)
-    fa=redundancia/ant
+    fa=calculaAptidao(redundancia,ant)
     pop.append([fa, solucao])
     
     
