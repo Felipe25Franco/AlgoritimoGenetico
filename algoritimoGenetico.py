@@ -73,6 +73,8 @@ def calculaAptidao(redundancia,ant):
     fa = redundancia / ant
     return fa
 
+
+
 cont=0
 Best=[]
 faBest=0
@@ -116,6 +118,7 @@ cont = 0
 
 while (cont < geracoes):
 
+    pais = []
     cont += 1
     print(f"\n--- Geração {cont} ---")
     pais = random.sample(pop, 50)
@@ -125,6 +128,17 @@ while (cont < geracoes):
     for i, (aptidao, solucao) in enumerate(pais):
         print(f"Pai {i+1}: Aptidão = {aptidao:.4f}, Solução = {solucao}")
     
+    nova_geracao = []
+    contCross = 0
+    maxCross = populacao*0,8
+    contMut = 0
+    maxMut = populacao*0.2
+    while contCross < maxCross:
+
+        
+
+    while contMut < maxMut:
+
 
     
 #print("Melhor solução")
