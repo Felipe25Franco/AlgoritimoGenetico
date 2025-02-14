@@ -2,8 +2,8 @@ import random
 
 totalFazendas = 40
 raioAntena = 10
-populacao = 500
-geracoes = 100
+populacao = 10
+geracoes = 3
 
 distanciaFazendas = [[ 0.0,  3.6,  16.5,  28.4,  14.8,  29.1,  25.3,  25.6,  25.1,  22.5,  23.0,  14.6,  17.0,  19.2,  25.6,  25.8,  29.1,  37.5,  27.0,  33.1,  39.8,  41.9,  33.2,  36.2,  37.6,  35.7,  34.9,  36.8,  35.4,  36.3,  38.1,  42.0,  43.4,  43.1,  40.3,  42.4,  47.5,  46.5,  41.6,  50.5],
 [3.6,  0.0,  18.0,  30.1,  11.7,  30.4,  26.5,  26.7,  26.0,  22.8,  19.7,  12.5,  13.4,  16.0,  22.0,  24.8,  28.3,  36.9,  24.0,  31.6,  38.9,  41.0,  29.8,  32.7,  35.8,  33.6,  31.6,  33.2,  32.8,  33.7,  34.7,  38.5,  41.7,  41.1,  37.1,  38.9,  46.0,  44.9,  39.1,  49.2],
@@ -54,7 +54,7 @@ def calculaCobertura(solucao):
     for i in range (len(solucao)):
         pos=solucao[i]
         for j in range (totalFazendas):
-            if distanciaFazendas[pos][j]<=10:
+            if distanciaFazendas[pos][j]<=raioAntena:
                 cob[j]=1
     tot=sum(cob)
     return(tot)
@@ -65,7 +65,7 @@ def calculaRedundancia(solucao):
     for i in range (len(solucao)):
         pos=solucao[i]
         for j in range (totalFazendas):
-            if distanciaFazendas[pos][j]<=10:
+            if distanciaFazendas[pos][j]<=raioAntena:
                 red+=1
     return(red)
 
@@ -121,7 +121,10 @@ while (cont < geracoes):
     pais = []
     cont += 1
     print(f"\n--- Geração {cont} ---")
-    pais = random.sample(pop, 50)
+    while len(pais) < 5:
+        pai = random.choice(pop)
+        if pai not in pais:
+            pais.append(pai)
     
     # Exibe os pais selecionados
     print("Pais selecionados:")
@@ -130,17 +133,80 @@ while (cont < geracoes):
     
     nova_geracao = []
     contCross = 0
-    maxCross = populacao*0,8
+    maxCross = populacao*0.8
     contMut = 0
     maxMut = populacao*0.2
     while contCross < maxCross:
+        pai1, pai2 = random.sample(pais, 2)
+        while pai1 == pai2:
+            pai2 = random.sample(pais)
 
+         # Divide os pais em 3 partes iguais
+        
+        pos1pai1 = len(pai1[1]) // 4
+        pos2pai1 = len(pai1[1]) // 2
+        pos3pai1 = 3 * len(pai1[1]) // 4
+        pos1pai2 = len(pai2[1]) // 4
+        pos2pai2 = len(pai2[1]) // 2
+        pos3pai2 = 3 * len(pai2[1]) // 4
         
 
-    while contMut < maxMut:
+        # Criar as 3 partes dos pais
+        parte1_pai1 = pai1[1][:pos1pai1]
+      
+        parte2_pai1 = pai1[1][pos2pai1:pos3pai1]
+      
+        parte3_pai1 = pai1[1][pos3pai1:]
+       
 
+        parte1_pai2 = pai2[1][:pos1pai2]
+      
+        parte2_pai2 = pai2[1][pos2pai2:pos3pai2]
+       
+        parte3_pai2 = pai2[1][pos3pai2:]
+       
 
+        # Aleatoriamente escolhe 1 parte de cada pai
+        escolha_pai1 = random.choice([parte1_pai1, parte2_pai1, parte3_pai1])
+        escolha_pai2 = random.choice([parte1_pai2, parte2_pai2, parte3_pai2])
+
+       
+
+        for i in escolha_pai1:
+            if i in escolha_pai2:
+                escolha_pai2.remove(i)
+
+        # Inicializa o filho com as partes escolhidas dos pais
+        filho = escolha_pai1 + escolha_pai2
+        
+        #ajuste
+        tot=calculaCobertura(filho)
+        if tot<40:
+            for j in range (totalFazendas):
+                tota=calculaCobertura(filho)
+                filho.append(j)
+                tot=calculaCobertura(filho)
+                if tota==tot:
+                    pos=filho.index(j)
+                    del filho[pos]
+        redundancia=calculaRedundancia(filho)
+        ant=len(filho)
+        fa=calculaAptidao(redundancia,ant)
+        nova_geracao.append([fa, filho])
+        if (fa>faBest):
+            faBest=fa
+            Best=solucao[:]
+        # Exibe os filhos criados com sua aptidão e solução
+        print(f"Filho criado (Aptidão = {fa:.4f} Solução = {filho}):")
+        
+        contCross += 1
+        
+    #while contMut < maxMut:
+
+     #   contMut += 1
+
+    #pop = nova_geracao
     
 #print("Melhor solução")
 #print(Best)
-#print("Aptidão Best",faBest)  
+#print("Aptidão Best",faBest)
