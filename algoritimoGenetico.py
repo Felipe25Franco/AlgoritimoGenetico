@@ -192,7 +192,11 @@ while (cont < geracoes):
         redundancia=calculaRedundancia(filho)
         ant=len(filho)
         fa=calculaAptidao(redundancia,ant)
-        nova_geracao.append([fa, filho])
+        if filho not in nova_geracao:
+            nova_geracao.append([fa, filho])
+        else:
+            del filho
+            contCross -= 1
         if (fa>faBest):
             faBest=fa
             Best=solucao[:]
