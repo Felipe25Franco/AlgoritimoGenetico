@@ -131,6 +131,9 @@ while (cont < geracoes):
     print("Pais selecionados:")
     for i, (aptidao, solucao) in enumerate(pais):
         print(f"Pai {i+1}: Aptidão = {aptidao:.4f}, Solução = {solucao}")
+
+
+    print("----------------------------------------------------------------------------------------------------------------------------------------------")
     
     nova_geracao = []
     contCross = 0
@@ -233,6 +236,11 @@ while (cont < geracoes):
                 redundancia=calculaRedundancia(pai3[1])
                 ant=len(pai3[1])
                 fa=calculaAptidao(redundancia,ant)
+                if (fa>faBest):
+                    faBest=fa
+                    Best=solucao[:]  
+
+                nova_geracao.append([fa, pai3])    
                 newFazenda += 1
             
         # Exibe os filhos criados com sua aptidão e solução
@@ -245,6 +253,3 @@ while (cont < geracoes):
 
    
     
-print("Melhor solução")
-print(Best)
-print("Aptidão Best",faBest)
