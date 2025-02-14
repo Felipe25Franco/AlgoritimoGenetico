@@ -202,17 +202,49 @@ while (cont < geracoes):
             faBest=fa
             Best=solucao[:]
         # Exibe os filhos criados com sua aptidão e solução
-        print(f"Filho criado (Aptidão = {fa:.4f} Solução = {filho}):")
+        print(f"Filho criado (Aptidão = {fa:.2f} Solução = {filho}):")
         
         contCross += 1
+        genes_removidos = []
         
     while contMut < maxMut:
+        pai3 = random.choice(pais)
+      
+        tamanhoPai3 = len(pai3[1])
        
+        tam = int(tamanhoPai3 * 0.2)
+      
+
+        indices_remocao = random.sample(range(tamanhoPai3), tam)
+       
+        genes_removidos = [pai3[1][i] for i in indices_remocao]
+        
+        pai3[1] = [gene for i, gene in enumerate(pai3[1]) if i not in indices_remocao]
+        
+
+        newFazenda = 0
+       
+        while newFazenda < tam:
+            newFazenda1 = random.randint(0, totalFazendas -1)
+
+           
+            if newFazenda1 not in pai3[1] and newFazenda1 not in genes_removidos:
+                pai3[1].append(newFazenda1)  # Adiciona o novo gene
+                redundancia=calculaRedundancia(pai3[1])
+                ant=len(pai3[1])
+                fa=calculaAptidao(redundancia,ant)
+                newFazenda += 1
+            
+        # Exibe os filhos criados com sua aptidão e solução
+        print(f"Filho criado (Aptidão = {fa:.2f} Solução = {pai3[1]}):")
+
+            
+    
         
         contMut += 1
 
-    #pop = nova_geracao
+   
     
-#print("Melhor solução")
-#print(Best)
-#print("Aptidão Best",faBest)
+print("Melhor solução")
+print(Best)
+print("Aptidão Best",faBest)
