@@ -232,10 +232,28 @@ while (cont < geracoes):
 
            
             if newFazenda1 not in pai3[1] and newFazenda1 not in genes_removidos:
-                pai3[1].append(newFazenda1)  # Adiciona o novo gene
+                #ajuste
+                tot=calculaCobertura(filho)
+                if tot<40:
+                    for j in range (totalFazendas):
+                        tota=calculaCobertura(pai3[1])
+                        filho.append(j)
+                        tot=calculaCobertura(pai3[1])
+                        if tota==tot:
+                            pos=filho.index(j)
+                            del filho[pos]
+
                 redundancia=calculaRedundancia(pai3[1])
+                
+                
                 ant=len(pai3[1])
                 fa=calculaAptidao(redundancia,ant)
+                if pai3 not in nova_geracao:
+                    pai3[1].append(newFazenda1)  # Adiciona o novo gene
+                else:
+                    del filho
+                    contCross -= 1
+                
                 if (fa>faBest):
                     faBest=fa
                     Best=solucao[:]  
@@ -245,6 +263,8 @@ while (cont < geracoes):
             
         # Exibe os filhos criados com sua aptidão e solução
         print(f"Filho criado (Aptidão = {fa:.2f} Solução = {pai3[1]}):")
+        
+        #pais  = nova_geracao
 
             
     
