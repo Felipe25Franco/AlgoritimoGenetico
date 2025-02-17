@@ -70,10 +70,10 @@ def calculaRedundancia(solucao):
                 red+=1
     return(red)
 
+
 def calculaAptidao(redundancia,ant):
     fa = redundancia / ant
     return fa
-
 
 
 cont=0
@@ -83,7 +83,6 @@ pop=[]
 
 while (cont < populacao):
     cont+=1
-
     solucao=[]
     tot=calculaCobertura(solucao)
     
@@ -98,41 +97,29 @@ while (cont < populacao):
     redundancia = calculaRedundancia(solucao)
     ant=len(solucao)
     fa=calculaAptidao(redundancia,ant)
-    pop.append([fa, solucao])
-    
-    
+    pop.append([fa, solucao]) 
     if (fa>faBest):
         faBest=fa
         Best=solucao[:]
-        
-    # Print da solução criada
     print(f"Solução {cont}: Aptidão = {fa:.4f}, Antenas = {ant}, Redundância = {redundancia}, Solução = {solucao}")
 
-# Melhor solução ao final
 print("\n*** Melhor solução encontrada ***")
 print(f"Aptidão = {faBest:.4f}")
 print(f"Solução = {Best}")
 
-#GERAÇÕES POPULACIONAIS
+cont2 = 0
 
-cont = 0
-
-while (cont < geracoes):
-
+while (cont2 < geracoes):
     pais = []
-    cont += 1
-    print(f"\n--- Geração {cont} ---")
+    cont2 += 1
+    print(f"\n--- Geração {cont2} ---")
     while len(pais) < 5:
         pai = random.choice(pop)
         if pai not in pais:
             pais.append(pai)
-    
-    # Exibe os pais selecionados
     print("Pais selecionados:")
     for i, (aptidao, solucao) in enumerate(pais):
         print(f"Pai {i+1}: Aptidão = {aptidao:.4f}, Solução = {solucao}")
-
-
     print("----------------------------------------------------------------------------------------------------------------------------------------------")
     
     nova_geracao = []
@@ -144,8 +131,6 @@ while (cont < geracoes):
         pai1, pai2 = random.sample(pais, 2)
         while pai1 == pai2:
             pai2 = random.sample(pais)
-
-         # Divide os pais em 3 partes iguais
         
         pos1pai1 = len(pai1[1]) // 4
         pos2pai1 = len(pai1[1]) // 2
@@ -154,36 +139,22 @@ while (cont < geracoes):
         pos2pai2 = len(pai2[1]) // 2
         pos3pai2 = 3 * len(pai2[1]) // 4
         
-
-        # Criar as 3 partes dos pais
-        parte1_pai1 = pai1[1][:pos1pai1]
-      
-        parte2_pai1 = pai1[1][pos2pai1:pos3pai1]
-      
-        parte3_pai1 = pai1[1][pos3pai1:]
-       
-
-        parte1_pai2 = pai2[1][:pos1pai2]
-      
-        parte2_pai2 = pai2[1][pos2pai2:pos3pai2]
-       
+        parte1_pai1 = pai1[1][:pos1pai1]      
+        parte2_pai1 = pai1[1][pos2pai1:pos3pai1]      
+        parte3_pai1 = pai1[1][pos3pai1:]     
+        parte1_pai2 = pai2[1][:pos1pai2]      
+        parte2_pai2 = pai2[1][pos2pai2:pos3pai2]       
         parte3_pai2 = pai2[1][pos3pai2:]
        
-
-        # Aleatoriamente escolhe 1 parte de cada pai
         escolha_pai1 = random.choice([parte1_pai1, parte2_pai1, parte3_pai1])
         escolha_pai2 = random.choice([parte1_pai2, parte2_pai2, parte3_pai2])
-
-       
 
         for i in escolha_pai1:
             if i in escolha_pai2:
                 escolha_pai2.remove(i)
 
-        # Inicializa o filho com as partes escolhidas dos pais
         filho = escolha_pai1 + escolha_pai2
         
-        #ajuste
         tot=calculaCobertura(filho)
         if tot<40:
             for j in range (totalFazendas):
@@ -204,35 +175,22 @@ while (cont < geracoes):
         if (fa>faBest):
             faBest=fa
             Best=solucao[:]
-        # Exibe os filhos criados com sua aptidão e solução
         print(f"Filho criado (Aptidão = {fa:.2f} Solução = {filho}):")
         
         contCross += 1
         genes_removidos = []
         
     while contMut < maxMut:
-        pai3 = random.choice(pais)
-      
-        tamanhoPai3 = len(pai3[1])
-       
-        tam = int(tamanhoPai3 * 0.2)
-      
-
-        indices_remocao = random.sample(range(tamanhoPai3), tam)
-       
-        genes_removidos = [pai3[1][i] for i in indices_remocao]
-        
-        pai3[1] = [gene for i, gene in enumerate(pai3[1]) if i not in indices_remocao]
-        
-
+        pai3 = random.choice(pais)      
+        tamanhoPai3 = len(pai3[1])       
+        tam = int(tamanhoPai3 * 0.2)     
+        indices_remocao = random.sample(range(tamanhoPai3), tam)       
+        genes_removidos = [pai3[1][i] for i in indices_remocao]        
+        pai3[1] = [gene for i, gene in enumerate(pai3[1]) if i not in indices_remocao]       
         newFazenda = 0
-       
         while newFazenda < tam:
-            newFazenda1 = random.randint(0, totalFazendas -1)
-
-           
+            newFazenda1 = random.randint(0, totalFazendas -1)           
             if newFazenda1 not in pai3[1] and newFazenda1 not in genes_removidos:
-                #ajuste
                 tot=calculaCobertura(filho)
                 if tot<40:
                     for j in range (totalFazendas):
@@ -242,33 +200,21 @@ while (cont < geracoes):
                         if tota==tot:
                             pos=filho.index(j)
                             del filho[pos]
-
-                redundancia=calculaRedundancia(pai3[1])
-                
-                
+                redundancia=calculaRedundancia(pai3[1])               
                 ant=len(pai3[1])
                 fa=calculaAptidao(redundancia,ant)
                 if pai3 not in nova_geracao:
-                    pai3[1].append(newFazenda1)  # Adiciona o novo gene
+                    pai3[1].append(newFazenda1)
                 else:
                     del filho
-                    contCross -= 1
-                
+                    contCross -= 1                
                 if (fa>faBest):
                     faBest=fa
                     Best=solucao[:]  
-
                 nova_geracao.append([fa, pai3])    
                 newFazenda += 1
-            
-        # Exibe os filhos criados com sua aptidão e solução
-        print(f"Filho criado (Aptidão = {fa:.2f} Solução = {pai3[1]}):")
-        
-        #pais  = nova_geracao
-
-            
-    
-        
+        print(f"Filho criado (Aptidão = {fa:.2f} Solução = {pai3[1]}):")        
+        pop  = nova_geracao
         contMut += 1
 
    
