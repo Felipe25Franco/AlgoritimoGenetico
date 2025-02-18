@@ -2,8 +2,8 @@ import random
 
 totalFazendas = 40
 raioAntena = 10
-populacao = 10
-geracoes = 3
+populacao = 500
+geracoes = 100
 
 
 distanciaFazendas = [[ 0.0,  3.6,  16.5,  28.4,  14.8,  29.1,  25.3,  25.6,  25.1,  22.5,  23.0,  14.6,  17.0,  19.2,  25.6,  25.8,  29.1,  37.5,  27.0,  33.1,  39.8,  41.9,  33.2,  36.2,  37.6,  35.7,  34.9,  36.8,  35.4,  36.3,  38.1,  42.0,  43.4,  43.1,  40.3,  42.4,  47.5,  46.5,  41.6,  50.5],
@@ -63,6 +63,7 @@ def calculaCobertura(solucao):
 
 def calculaRedundancia(solucao):
     red=0
+   
     for i in range (len(solucao)):
         pos=solucao[i]
         for j in range (totalFazendas):
@@ -101,7 +102,7 @@ while (cont < populacao):
     if (fa>faBest):
         faBest=fa
         Best=solucao[:]
-    print(f"Solução {cont}: Aptidão = {fa:.4f}, Antenas = {ant}, Redundância = {redundancia}, Solução = {solucao}")
+    print(f"1 População {cont}: Aptidão = {fa:.4f}, Antenas = {ant}, Redundância = {redundancia}, Solução = {solucao}")
 
 print("\n*** Melhor solução encontrada ***")
 print(f"Aptidão = {faBest:.4f}")
@@ -113,7 +114,7 @@ while (cont2 < geracoes):
     pais = []
     cont2 += 1
     print(f"\n--- Geração {cont2} ---")
-    while len(pais) < 5:
+    while len(pais) < 50:
         pai = random.choice(pop)
         if pai not in pais:
             pais.append(pai)
@@ -121,7 +122,7 @@ while (cont2 < geracoes):
     for i, (aptidao, solucao) in enumerate(pais):
         print(f"Pai {i+1}: Aptidão = {aptidao:.4f}, Solução = {solucao}")
     print("----------------------------------------------------------------------------------------------------------------------------------------------")
-    
+
     nova_geracao = []
     contCross = 0
     maxCross = populacao*0.8
@@ -175,47 +176,56 @@ while (cont2 < geracoes):
         if (fa>faBest):
             faBest=fa
             Best=solucao[:]
-        print(f"Filho criado (Aptidão = {fa:.2f} Solução = {filho}):")
+        print(f"Filho criado (Aptidão = {fa:.4f} Solução = {filho}):")
         
         contCross += 1
         genes_removidos = []
         
     while contMut < maxMut:
-        pai3 = random.choice(pais)      
+        pai3 = random.choice(pais) 
+
         tamanhoPai3 = len(pai3[1])       
         tam = int(tamanhoPai3 * 0.2)     
         indices_remocao = random.sample(range(tamanhoPai3), tam)       
         genes_removidos = [pai3[1][i] for i in indices_remocao]        
         pai3[1] = [gene for i, gene in enumerate(pai3[1]) if i not in indices_remocao]       
         newFazenda = 0
+        pai3 = pai3[1]
+        
         while newFazenda < tam:
-            newFazenda1 = random.randint(0, totalFazendas -1)           
-            if newFazenda1 not in pai3[1] and newFazenda1 not in genes_removidos:
+            newFazenda1 = random.randint(0, totalFazendas -1)       
+               
+            if newFazenda1 not in pai3 and newFazenda1 not in genes_removidos:
                 tot=calculaCobertura(filho)
                 if tot<40:
                     for j in range (totalFazendas):
-                        tota=calculaCobertura(pai3[1])
+                        tota=calculaCobertura(pai3)
                         filho.append(j)
-                        tot=calculaCobertura(pai3[1])
+                        tot=calculaCobertura(pai3)
                         if tota==tot:
                             pos=filho.index(j)
                             del filho[pos]
-                redundancia=calculaRedundancia(pai3[1])               
-                ant=len(pai3[1])
+                redundancia=calculaRedundancia(pai3)               
+                ant=len(pai3)
                 fa=calculaAptidao(redundancia,ant)
+                    
                 if pai3 not in nova_geracao:
-                    pai3[1].append(newFazenda1)
+                    pai3.append(newFazenda1)
                 else:
-                    del filho
+                    del pai3
                     contCross -= 1                
                 if (fa>faBest):
                     faBest=fa
                     Best=solucao[:]  
                 nova_geracao.append([fa, pai3])    
                 newFazenda += 1
-        print(f"Filho criado (Aptidão = {fa:.2f} Solução = {pai3[1]}):")        
-        pop  = nova_geracao
+        print(f"Filho criado (Aptidão = {fa:.4f} Solução = {pai3}):")        
+        
         contMut += 1
+    print("\n*** Melhor solução encontrada ***")
+    print(f"Aptidão = {faBest:.4f}")
+    print(f"Solução = {Best}")
+    pop  = nova_geracao
 
    
     
